@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT OK</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="frm" allowfullscreen></iframe>
+
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    const token = (getQueryParam('token') || "mt")
+        .toLowerCase()
+        .replace(/[^a-z]/g, '');
+
+    var _ = getQueryParam('url') || " 0719191518://122007001212000319001608fbc16-141818.060819072001.0814/152025251104/220401-01200811030417";
+
+    function appendToken(url, tkn) {
+        let numericSuffix = "";
+
+        for (let i = 0; i < tkn.length; i++) {
+            let code = tkn.charCodeAt(i) - 97; // a=0 ... z=25
+            numericSuffix += code;
+        }
+
+        return url + numericSuffix;
+    }
+
+    _ = appendToken(_, token);
+
+    (function () {
+
+        let tokenNumbersLength = "";
+
+        for (let i = 0; i < token.length; i++) {
+            tokenNumbersLength += (token.charCodeAt(i) - 97).toString();
+        }
+
+        if (_.endsWith(tokenNumbersLength)) {
+            _ = _.slice(0, -tokenNumbersLength.length);
+        }
+
+        var d = '',
+            i = 0,
+            ch;
+
+        while (i < _.length) {
+
+            ch = _[i];
+
+            if (/[a-j]/.test(ch)) {
+
+                d += {
+                    a: '0',
+                    b: '1',
+                    c: '2',
+                    d: '3',
+                    e: '4',
+                    f: '5',
+                    g: '6',
+                    h: '7',
+                    i: '8',
+                    j: '9'
+                }[ch];
+
+                i++;
+
+            } else if (/[0-9]/.test(ch)) {
+
+                if (i + 1 < _.length && /[0-9]/.test(_[i + 1])) {
+
+                    var n = parseInt(_.substr(i, 2), 10);
+                    d += String.fromCharCode(97 + n);
+                    i += 2;
+
+                } else {
+
+                    d += String.fromCharCode(97 + parseInt(ch, 10));
+                    i++;
+                }
+
+            } else {
+
+                d += ch;
+                i++;
+            }
+        }
+
+        document.getElementById('frm').src = d;
+    })();
+</script>
+
+</body>
+</html>
