@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LYRA SOFTWARE BUILDER — Created by Muhammad Taqi</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px;
+  font-family:'Segoe UI',Roboto,sans-serif;color:#e2e8f0;
+  background:radial-gradient(circle at 15% 0%, #221b52 0%, #0b1020 45%, #04060d 100%);
+  background-attachment:fixed;}
+.wrap{width:100%;max-width:640px;}
+.screen{display:none;}
+.screen.active{display:block;animation:pop .4s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.card{background:rgba(15,23,42,.78);border:1px solid rgba(255,255,255,.09);border-radius:24px;
+  padding:34px 30px;backdrop-filter:blur(18px);box-shadow:0 30px 70px rgba(0,0,0,.6);text-align:center}
+.badge{display:inline-block;font-size:10px;letter-spacing:.2em;padding:6px 14px;border-radius:100px;
+  background:linear-gradient(90deg,#6366f1,#a855f7);font-weight:800}
+h1{font-size:2.5rem;margin:20px 0 4px;line-height:1.05;letter-spacing:-.02em}
+h1 span{background:linear-gradient(90deg,#818cf8,#c084fc,#f472b6);-webkit-background-clip:text;
+  background-clip:text;-webkit-text-fill-color:transparent}
+.byline{color:#94a3b8;font-size:.9rem;margin:0 0 28px}
+.byline b{color:#fff}
+h2{font-size:1.35rem;margin:16px 0 6px;letter-spacing:.02em}
+.sub{color:#94a3b8;font-size:.85rem;margin:0 0 22px;line-height:1.6}
+.btn{border:none;cursor:pointer;font-weight:800;font-size:13px;letter-spacing:.06em;padding:15px 26px;
+  border-radius:14px;color:#fff;background:linear-gradient(135deg,#6366f1,#a855f7);transition:.2s;
+  box-shadow:0 10px 25px rgba(99,102,241,.35);font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(99,102,241,.5)}
+.btn.ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);box-shadow:none}
+.btn.ghost:hover{background:rgba(255,255,255,.14)}
+.btn.big{width:100%;padding:18px;font-size:14px}
+.btn.green{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 10px 25px rgba(16,185,129,.35);}
+.btn.green:hover{box-shadow:0 14px 30px rgba(16,185,129,.5);}
+label{display:block;text-align:left;font-size:10px;letter-spacing:.18em;color:#94a3b8;
+  font-weight:800;margin:16px 0 7px}
+.inp{width:100%;background:#0b1223;border:1px solid #334155;border-radius:12px;padding:14px;
+  color:#fff;font-size:14px;outline:none;transition:.2s;font-family:inherit}
+.inp:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+.hashinp{display:flex;align-items:center;background:#0b1223;border:1px solid #334155;border-radius:12px;overflow:hidden}
+.hashinp span{padding:0 0 0 14px;color:#a855f7;font-weight:800}
+.hashinp .inp{border:none;background:transparent;box-shadow:none!important}
+.hint{font-size:11px;color:#64748b;text-align:left;margin:10px 0 0;line-height:1.6}
+.row{display:flex;gap:10px;margin-top:16px}
+.row .btn{flex:1}
+.tag{margin:20px auto 8px;padding:14px 18px;border-radius:14px;background:rgba(99,102,241,.14);
+  border:1px solid rgba(99,102,241,.4);font-weight:900;font-size:1.15rem;letter-spacing:.02em}
+.tag .hash{color:#c084fc}
+.tag .bname{color:#fff}
+.urlbox{margin:12px 0 0;padding:10px 14px;border-radius:10px;background:#020617;
+  border:1px solid rgba(16,185,129,.4);font-family:ui-monospace,Menlo,monospace;font-size:11px;
+  color:#10b981;word-break:break-all;text-align:left;line-height:1.6}
+.urlbox .hash{color:#c084fc;font-weight:800}
+.urlbox .domain{color:#f8fafc}
+.meta{font-size:11px;color:#64748b;margin-top:10px;line-height:1.7;word-break:break-all}
+.tick{width:64px;height:64px;margin:0 auto;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);
+  display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;
+  box-shadow:0 12px 30px rgba(16,185,129,.45)}
+.foot{font-size:10px;color:#475569;text-align:center;margin-top:18px;letter-spacing:.1em}
+.loader{display:flex;align-items:center;justify-content:center;min-height:100vh;color:#94a3b8;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="lyraApp" style="display:none;">
+
+  <!-- ================= SCREEN 1 : LANDING ================= -->
+  <div class="screen active" id="screen-landing">
+    <div class="card">
+      <div class="badge">POWERED BY TAQI CLOUD</div>
+      <h1>LYRA <span>SOFTWARE</span> BUILDER</h1>
+      <p class="byline">Created by <b>Muhammad Taqi</b></p>
+      <button class="btn big" onclick="goCreate()">CREATE YOUR OWN WEB BUILDER</button>
+      <div class="foot">v1.0 · ALL-IN-ONE EDITION</div>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN 2 : NAME FORM ================= -->
+  <div class="screen" id="screen-form">
+    <div class="card">
+      <div class="badge">STEP 2 OF 2</div>
+      <h2>WRITE YOUR NAMES</h2>
+      <p class="sub">Yeh naam aapke web builder ke code ke andar permanently set ho jayenge.</p>
+
+      <label>WEB BUILDER NAME</label>
+      <input class="inp" id="inBuilderName" maxlength="28" placeholder="e.g. MY STUDIO">
+
+      <label>CREATOR NAME</label>
+      <div class="hashinp">
+        <span>#</span>
+        <input class="inp" id="inCreatorName" maxlength="20" placeholder="e.g. taqi">
+      </div>
+      <p class="hint"><b>TAQI CLOUD</b>  Publish ke baad aapko ek <b>shareable URL</b> milega jise koi bhi browser mein daal kar seedha aapka builder khol sakta hai.</p>
+
+      <div class="row">
+        <button class="btn ghost" onclick="show('screen-landing')">← BACK</button>
+        <button class="btn" onclick="publishBuilder()">🚀 PUBLISH</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN 3 : SUCCESS ================= -->
+  <div class="screen" id="screen-success">
+    <div class="card">
+      <div class="tick">✓</div>
+      <h2>PUBLISHED TO TAQI CLOUD</h2>
+      <p class="sub">Yeh live URL share karein — koi bhi is link se aapka builder khol sakta hai.</p>
+
+      <div class="tag" id="publishTag"></div>
+      <div class="urlbox" id="publishUrl">…</div>
+      <div class="meta" id="publishMeta"></div>
+
+      <div class="row">
+        <button class="btn green" onclick="openSite()">🌐 OPEN SITE</button>
+      </div>
+      <div class="row">
+        <button class="btn ghost" onclick="copyShareLink()">🔗 COPY SHARE LINK</button>
+        <button class="btn ghost" onclick="copyBuilderCode()">📋 COPY CODE</button>
+      </div>
+      <div class="row">
+        <button class="btn ghost" onclick="show('screen-form')">← EDIT NAMES</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     BUILDER TEMPLATE  (raw text — never executed on this page)
+     ============================================================ -->
+<script type="text/template" id="builderTemplate">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Builder</title>
+<style>
+:root{--primary:#6366f1;--accent:#a855f7;--bg-gradient:radial-gradient(circle at 0% 0%, #1e1b4b 0%, #0f172a 100%);}
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',Roboto,sans-serif;background:var(--bg-gradient);background-attachment:fixed;
+  color:#fff;margin:0;display:flex;height:100vh;overflow:hidden;}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:9px}
+.editor{width:400px;flex:0 0 400px;padding:18px;background:rgba(15,23,42,.96);backdrop-filter:blur(20px);
+  border-right:1px solid rgba(255,255,255,.1);overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
+.bname{font-size:15px;font-weight:800;line-height:1.2}
+.bcreator{font-size:10px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase}
+h4{margin:8px 0 0;font-size:10px;letter-spacing:.16em;color:#94a3b8;text-transform:uppercase;font-weight:700}
+.theme-container{display:flex;gap:8px}
+.theme-dot{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s}
+.theme-dot.active{border-color:#fff;box-shadow:0 0 10px rgba(255,255,255,.5)}
+.bg-gallery{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.bg-thumb{aspect-ratio:1;border-radius:5px;cursor:pointer;background-size:cover;background-position:center;
+  border:2px solid transparent;transition:.2s;display:flex;align-items:center;justify-content:center;
+  font-size:7px;color:#94a3b8;background-color:#1e293b}
+.bg-thumb.active{border-color:var(--primary);transform:scale(1.06)}
+.page-tab-bar{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px}
+.page-tab{padding:6px 11px;background:rgba(255,255,255,.06);border-radius:7px;cursor:pointer;
+  font-size:11px;white-space:nowrap;border:1px solid transparent;transition:.2s}
+.page-tab.active{border-color:var(--primary);background:rgba(255,255,255,.16)}
+input,textarea{width:100%;background:#0f172a;border:1px solid #334155;border-radius:7px;padding:9px;
+  color:#fff;font-size:12.5px;font-family:inherit;margin-bottom:6px;transition:.2s}
+input:focus,textarea:focus{border-color:var(--primary);outline:none}
+.section-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:11px;padding:12px;position:relative;margin-bottom:8px}
+.section-card label{font-size:9px;color:#94a3b8;letter-spacing:.14em;font-weight:700;display:block;margin-bottom:5px}
+.remove-btn{position:absolute;top:8px;right:8px;background:#ef4444;border:none;color:#fff;
+  border-radius:5px;font-size:9px;padding:2px 7px;cursor:pointer}
+.add-controls{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn-action{background:var(--primary);color:#fff;border:none;padding:10px;border-radius:8px;cursor:pointer;
+  font-weight:700;font-size:11px;letter-spacing:.04em;transition:.2s;font-family:inherit}
+.btn-action:hover{transform:translateY(-1px);opacity:.92}
+.btn-action.acc{background:var(--accent)}
+.btn-action.gray{background:#374151}
+.btn-action.green{background:#10b981}
+.stack{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.preview-pane{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;align-items:center}
+.canvas{width:100%;max-width:680px;min-height:460px;background:var(--bg-gradient);background-size:cover;
+  background-position:center;border-radius:26px;border:1px solid rgba(255,255,255,.1);overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.55);transition:.4s}
+.nav-preview{display:flex;justify-content:center;gap:18px;padding:16px;background:rgba(0,0,0,.25);backdrop-filter:blur(10px)}
+.nav-link{color:#fff;font-size:13px;font-weight:700;opacity:.75;cursor:pointer;transition:.2s}
+.nav-link:hover{opacity:1;color:var(--primary)}
+.code-output{width:100%;max-width:680px;background:#000;color:#10b981;padding:16px;border-radius:12px;
+  font-family:ui-monospace,Menlo,monospace;font-size:11px;white-space:pre-wrap;word-break:break-all;
+  max-height:300px;overflow:auto;border:1px solid rgba(16,185,129,.4);margin-top:10px}
+.stats{font-size:11px;color:#94a3b8;margin-top:8px}
+.cloud-overlay{position:fixed;inset:0;background:rgba(2,6,23,.88);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.cloud-overlay.show{display:flex}
+.cloud-card{background:#0f172a;border:1px solid var(--primary);border-radius:20px;padding:34px;
+  text-align:center;max-width:440px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.8);animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.cloud-icon{font-size:44px}
+.cloud-card h3{margin:10px 0 6px;font-size:15px;letter-spacing:.1em;color:#10b981}
+.cloud-tag{margin:16px 0;padding:12px;border-radius:12px;background:rgba(99,102,241,.15);
+  border:1px solid rgba(99,102,241,.4);font-weight:800;font-size:16px}
+.cloud-tag .hash{color:var(--accent)}
+.cloud-sub{font-size:11px;color:#94a3b8;margin-bottom:18px;line-height:1.7}
+.cloud-url{margin:0 0 16px;padding:9px 12px;border-radius:9px;background:#020617;
+  border:1px solid rgba(16,185,129,.4);font-family:ui-monospace,Menlo,monospace;font-size:10px;
+  color:#10b981;word-break:break-all;text-align:left}
+.cloud-url .hash{color:var(--accent);font-weight:800}
+.foot{margin-top:auto;font-size:10px;color:#64748b;text-align:center;padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.07);letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<div class="editor">
+  <div class="brand">
+    <div class="logo">◈</div>
+    <div>
+      <div class="bname" id="brandName">Builder</div>
+      <div class="bcreator" id="brandCreator">by #</div>
+    </div>
+  </div>
+
+  <h4>Theme Color</h4>
+  <div class="theme-container">
+    <div class="theme-dot active" style="background:#6366f1" onclick="setTheme('indigo',this)"></div>
+    <div class="theme-dot" style="background:#ec4899" onclick="setTheme('rose',this)"></div>
+    <div class="theme-dot" style="background:#10b981" onclick="setTheme('emerald',this)"></div>
+    <div class="theme-dot" style="background:#f59e0b" onclick="setTheme('amber',this)"></div>
+  </div>
+
+  <h4>Background</h4>
+  <div class="bg-gallery" id="bgGallery"></div>
+
+  <h4>Pages</h4>
+  <div class="page-tab-bar" id="pageTabs"></div>
+  <input type="text" id="pageTitleInput" placeholder="Page name" oninput="updatePageTitle()">
+
+  <h4>Elements</h4>
+  <div id="elementsList"></div>
+
+  <div class="add-controls">
+    <button class="btn-action acc" onclick="addElement('title')">+ TITLE</button>
+    <button class="btn-action" onclick="addElement('text')">+ TEXT</button>
+    <button class="btn-action" onclick="addElement('button')">+ BUTTON</button>
+    <button class="btn-action gray" onclick="addElement('media')">+ MEDIA</button>
+    <button class="btn-action gray" onclick="addElement('embed')">+ HTML</button>
+    <button class="btn-action gray" onclick="addNewPage()">+ PAGE</button>
+  </div>
+
+  <div class="stack">
+    <button class="btn-action green" onclick="publishToCloud()">☁️ PUBLISH TO TAQI CLOUD</button>
+  </div>
+
+  <div class="foot" id="footTag"># · Builder</div>
+</div>
+
+<div class="preview-pane">
+  <div class="canvas" id="canvasBg">
+    <div class="nav-preview" id="navPreview"></div>
+    <div id="contentPreview" style="padding:40px;"></div>
+  </div>
+
+  <h4 style="margin-top:26px;color:var(--primary);align-self:flex-start;max-width:680px;width:100%">LIVE CODE OUTPUT</h4>
+  <div class="code-output" id="codeOutput">Initializing...</div>
+  <div class="stats"><span id="statLines">0 lines</span> · <span id="statChars">0 chars</span></div>
+</div>
+
+<div class="cloud-overlay" id="cloudOverlay">
+  <div class="cloud-card">
+    <div class="cloud-icon">☁️</div>
+    <h3>PUBLISHED TO TAQI CLOUD</h3>
+    <div class="cloud-tag" id="cloudTag"></div>
+    <div class="cloud-url" id="cloudUrl">…</div>
+    <div class="cloud-sub" id="cloudSub"></div>
+    <div style="display:flex;gap:8px;justify-content:center;">
+      <button class="btn-action green" onclick="openLastPublished()">🌐 OPEN SITE</button>
+      <button class="btn-action" onclick="closeCloud()">BACK TO EDITOR</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= BRAND CORE (creator name is Base64-encoded) ================= */
+var _BRAND = { name: "__BUILDER_NAME_JS__", creator: "__CREATOR_B64__" };
+function _dec(s){ try { return decodeURIComponent(escape(atob(s))); } catch(e){ return ''; } }
+var CREATOR = _dec(_BRAND.creator) || 'creator';
+var BNAME   = _BRAND.name || 'WEB BUILDER';
+
+document.title = BNAME + ' | Web Builder';
+document.getElementById('brandName').textContent    = BNAME;
+document.getElementById('brandCreator').textContent = 'by #' + CREATOR;
+document.getElementById('footTag').textContent      = '#' + CREATOR + ' · ' + BNAME;
+
+/* ================= DATA ================= */
+var themes = {
+  indigo : { p:'#6366f1', a:'#a855f7', bg:'radial-gradient(circle at 0% 0%, #1e1b4b 0%, #0f172a 100%)' },
+  rose   : { p:'#ec4899', a:'#f43f5e', bg:'radial-gradient(circle at 0% 0%, #4c0519 0%, #0f172a 100%)' },
+  emerald: { p:'#10b981', a:'#059669', bg:'radial-gradient(circle at 0% 0%, #064e3b 0%, #020617 100%)' },
+  amber  : { p:'#f59e0b', a:'#d97706', bg:'radial-gradient(circle at 0% 0%, #451a03 0%, #0f172a 100%)' }
+};
+
+var bgImages = [
+  'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=500',
+  'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=500',
+  'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=500',
+  'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=80&w=500',
+  'https://images.unsplash.com/photo-1533134486753-c833f0ed4866?q=80&w=500'
+];
+
+var currentTheme = 'indigo';
+var currentBg    = 'none';
+var currentPageId = 'p1';
+var lastPublishedUrl = '';
+
+var pages = [{
+  id:'p1', title:'Home', elements:[
+    { type:'title',  val1:'Welcome to ' + BNAME, val2:'' },
+    { type:'text',   val1:'Yeh website ' + BNAME + ' se banayi gayi hai. Left panel se title, text, button aur media add karein — sab kuch live preview mein dikhega.', val2:'' },
+    { type:'button', val1:'Explore', val2:'#' }
+  ]
+}];
+
+/* ================= HELPERS ================= */
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function getCurrentPage(){
+  for (var i=0;i<pages.length;i++){ if(pages[i].id === currentPageId) return pages[i]; }
+  return pages[0];
+}
+
+/* ================= THEME / BACKGROUND ================= */
+function setTheme(t, el){
+  currentTheme = t;
+  var th = themes[t];
+  var root = document.documentElement;
+  root.style.setProperty('--primary', th.p);
+  root.style.setProperty('--accent',  th.a);
+  root.style.setProperty('--bg-gradient', th.bg);
+  var dots = document.querySelectorAll('.theme-dot');
+  for (var i=0;i<dots.length;i++) dots[i].classList.remove('active');
+  el.classList.add('active');
+  renderPreview();
+}
+
+function setBg(url, el){
+  currentBg = url;
+  var canvas = document.getElementById('canvasBg');
+  if(url === 'none'){
+    canvas.style.backgroundImage = '';
+  } else {
+    canvas.style.backgroundImage = 'linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(' + url + ')';
+  }
+  var thumbs = document.querySelectorAll('.bg-thumb');
+  for (var i=0;i<thumbs.length;i++) thumbs[i].classList.remove('active');
+  el.classList.add('active');
+  renderPreview();
+}
+
+/* ================= PAGES ================= */
+function addNewPage(){
+  var id = 'p' + Date.now();
+  pages.push({ id:id, title:'New Page', elements:[{ type:'title', val1:'Untitled Section', val2:'' }] });
+  switchPage(id);
+}
+function switchPage(id){
+  currentPageId = id;
+  renderTabs(); loadEditor(); renderPreview();
+}
+function updatePageTitle(){
+  getCurrentPage().title = document.getElementById('pageTitleInput').value;
+  renderTabs(); renderPreview();
+}
+function renderTabs(){
+  var html = '';
+  for (var i=0;i<pages.length;i++){
+    var p = pages[i];
+    html += '<div class="page-tab ' + (p.id === currentPageId ? 'active' : '') +
+            '" onclick="switchPage(\'' + p.id + '\')">' + esc(p.title) + '</div>';
+  }
+  document.getElementById('pageTabs').innerHTML = html;
+}
+
+/* ================= EDITOR ================= */
+function loadEditor(){
+  var page = getCurrentPage();
+  document.getElementById('pageTitleInput').value = page.title;
+  var list = document.getElementById('elementsList');
+  list.innerHTML = '';
+
+  for (var i=0;i<page.elements.length;i++){
+    (function(idx){
+      var el  = page.elements[idx];
+      var div = document.createElement('div');
+      div.className = 'section-card';
+      div.innerHTML = '<button class="remove-btn" onclick="removeElement(' + idx + ')">×</button>' +
+                      '<label>' + el.type.toUpperCase() + '</label>';
+
+      if(el.type === 'text' || el.type === 'title'){
+        var ta = document.createElement('textarea');
+        ta.value = el.val1 || '';
+        ta.placeholder = (el.type === 'title') ? 'Headline text...' : 'Paragraph content...';
+        ta.oninput = function(e){ el.val1 = e.target.value; renderPreview(); };
+        div.appendChild(ta);
+      } else if(el.type === 'button'){
+        var i1 = document.createElement('input');
+        i1.placeholder = 'Button label'; i1.value = el.val1 || '';
+        i1.oninput = function(e){ el.val1 = e.target.value; renderPreview(); };
+        var i2 = document.createElement('input');
+        i2.placeholder = 'Link (e.g. #p2 or https://...)'; i2.value = el.val2 || '';
+        i2.oninput = function(e){ el.val2 = e.target.value; renderPreview(); };
+        div.appendChild(i1); div.appendChild(i2);
+      } else if(el.type === 'media'){
+        var i3 = document.createElement('input');
+        i3.placeholder = 'Image / Video URL'; i3.value = el.val1 || '';
+        i3.oninput = function(e){ el.val1 = e.target.value; renderPreview(); };
+        div.appendChild(i3);
+      } else if(el.type === 'embed'){
+        var ta2 = document.createElement('textarea');
+        ta2.rows = 5;
+        ta2.value = el.val1 || '';
+        ta2.placeholder = 'Paste raw HTML / iframe here...';
+        ta2.oninput = function(e){ el.val1 = e.target.value; renderPreview(); };
+        div.appendChild(ta2);
+      }
+      list.appendChild(div);
+    })(i);
+  }
+}
+
+function addElement(type){
+  getCurrentPage().elements.push({ type:type, val1:'', val2:'' });
+  loadEditor(); renderPreview();
+}
+function removeElement(idx){
+  getCurrentPage().elements.splice(idx,1);
+  loadEditor(); renderPreview();
+}
+
+/* ================= PREVIEW ================= */
+function renderPreview(){
+  var navHtml = '';
+  for (var i=0;i<pages.length;i++){
+    navHtml += '<span class="nav-link" onclick="switchPage(\'' + pages[i].id + '\')">' +
+               esc(pages[i].title) + '</span>';
+  }
+  document.getElementById('navPreview').innerHTML = navHtml;
+
+  var page = getCurrentPage();
+  var html = '';
+  for (var j=0;j<page.elements.length;j++){
+    var el = page.elements[j];
+    var v1 = el.val1 ? String(el.val1).replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+    if(el.type === 'title'){
+      html += '<h2 style="font-size:2.6rem;font-weight:800;margin:10px 0;background:linear-gradient(to right,#fff,var(--primary));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">' + v1 + '</h2>';
+    }
+    if(el.type === 'text'){
+      html += '<p style="line-height:1.7;color:#cbd5e1;font-size:1.05rem;margin-bottom:20px;">' + v1 + '</p>';
+    }
+    if(el.type === 'button'){
+      html += '<div style="text-align:center"><a href="' + (el.val2 || '#') + '" style="display:inline-block;padding:12px 30px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-radius:50px;text-decoration:none;margin:10px;font-weight:bold;">' + v1 + '</a></div>';
+    }
+    if(el.type === 'media'){
+      html += '<img src="' + (el.val1 || '') + '" style="width:100%;max-height:400px;object-fit:cover;border-radius:15px;margin:20px 0;border:1px solid rgba(255,255,255,.1);">';
+    }
+    if(el.type === 'embed'){
+      html += '<div style="margin:20px 0">' + (el.val1 || '') + '</div>';
+    }
+  }
+  document.getElementById('contentPreview').innerHTML = html;
+
+  generateCode();
+}
+
+/* ================= CODE GENERATION ================= */
+function generateCode(){
+  var th = themes[currentTheme];
+
+  var finalBg = th.bg;
+  if(currentBg !== 'none'){
+    finalBg = "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('" + currentBg + "')";
+  }
+
+  var navHtml = '';
+  for (var i=0;i<pages.length;i++){
+    navHtml += '<a href="#' + pages[i].id + '">' + esc(pages[i].title) + '</a>\n        ';
+  }
+
+  var sectionsHtml = '';
+  for (var k=0;k<pages.length;k++){
+    var p = pages[k], inner = '';
+    for (var m=0;m<p.elements.length;m++){
+      var el = p.elements[m];
+      if(el.type === 'title')  inner += '\n            <h2 class="grad-text">' + (el.val1 || '') + '</h2>';
+      if(el.type === 'text')   inner += '\n            <p>' + (el.val1 || '') + '</p>';
+      if(el.type === 'button') inner += '\n            <center><a href="' + (el.val2 || '#') + '" class="btn">' + (el.val1 || '') + '</a></center>';
+      if(el.type === 'media')  inner += '\n            <img src="' + (el.val1 || '') + '" alt="media">';
+      if(el.type === 'embed')  inner += '\n            <div class="embed-block">' + (el.val1 || '') + '</div>';
+    }
+    var disp = (k === 0) ? 'display:block;' : '';
+    sectionsHtml += '<section id="' + p.id + '" style="' + disp + '">' + inner + '\n        </section>\n\n    ';
+  }
+
+  var code =
+'<!DOCTYPE html>\n' +
+'<html lang="en">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'    <title>' + esc(pages[0].title || 'My Site') + '</title>\n' +
+'    <style>\n' +
+'        :root { --primary:' + th.p + '; --accent:' + th.a + '; }\n' +
+'        body { background:' + finalBg + '; background-size:cover; background-attachment:fixed;\n' +
+'               color:#fff; font-family:"Segoe UI",sans-serif; margin:0; }\n' +
+'        nav { background:rgba(0,0,0,0.4); padding:20px; text-align:center;\n' +
+'              backdrop-filter:blur(10px); position:sticky; top:0; z-index:100; }\n' +
+'        nav a { margin:0 15px; color:#fff; text-decoration:none; font-weight:bold;\n' +
+'                opacity:0.8; transition:opacity .2s; }\n' +
+'        nav a:hover { opacity:1; color:var(--primary); }\n' +
+'        .container { max-width:800px; margin:auto; padding:40px 20px; }\n' +
+'        section { display:none; animation:fadeIn .7s ease-out; min-height:50vh; padding-bottom:50px; }\n' +
+'        section:target { display:block; }\n' +
+'        .grad-text { font-size:3.2rem; font-weight:800; margin:20px 0;\n' +
+'            background:linear-gradient(to right,#fff,var(--primary));\n' +
+'            -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }\n' +
+'        p { font-size:1.15rem; color:#cbd5e1; line-height:1.7; margin-bottom:25px; }\n' +
+'        .btn { display:inline-block; padding:15px 40px; margin:20px 0; color:#fff;\n' +
+'               background:linear-gradient(135deg,var(--primary),var(--accent));\n' +
+'               border-radius:50px; text-decoration:none; font-weight:bold; transition:transform .2s; }\n' +
+'        .btn:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,.3); }\n' +
+'        img { width:100%; border-radius:20px; margin:20px 0; box-shadow:0 10px 20px rgba(0,0,0,.5); }\n' +
+'        footer { text-align:center; padding:26px; font-size:12px; color:#94a3b8;\n' +
+'                 border-top:1px solid rgba(255,255,255,.08); }\n' +
+'        @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:none;} }\n' +
+'    </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'    <nav>\n        ' + navHtml + '\n    </nav>\n' +
+'    <div class="container">\n    ' + sectionsHtml + '</div>\n' +
+'    <footer>Built with ' + esc(BNAME) + ' &middot; #' + esc(CREATOR) + ' &middot; Published on TAQI CLOUD</footer>\n' +
+'</body>\n' +
+'</html>';
+
+  document.getElementById('codeOutput').textContent = code;
+  document.getElementById('statLines').textContent = code.split('\n').length + ' lines';
+  document.getElementById('statChars').textContent = code.length.toLocaleString() + ' chars';
+  return code;
+}
+
+/* ================= ACTIONS ================= */
+function publishToCloud(){
+  var code  = generateCode();
+  var blob  = new Blob([code], { type:'text/html' });
+  var blobUrl = URL.createObjectURL(blob);
+  var publishedUrl = blobUrl + '#' + encodeURIComponent(CREATOR);
+  lastPublishedUrl = publishedUrl;
+
+  var win = window.open(publishedUrl, '_blank');
+  if (!win) alert('Popup blocked! Please allow popups to publish.');
+
+  var lines = code.split('\n').length;
+  document.getElementById('cloudTag').innerHTML =
+      '<span class="hash">#' + esc(CREATOR) + '</span> · ' + esc(BNAME);
+  document.getElementById('cloudUrl').innerHTML =
+      '🔗 <span class="hash">#' + esc(CREATOR) + '</span>';
+  document.getElementById('cloudSub').innerHTML =
+      'Site published on <b>TAQI CLOUD</b> with URL <b>#' + esc(CREATOR) + '</b><br>' +
+      pages.length + ' pages · ' + lines + ' lines of code · ' +
+      code.length.toLocaleString() + ' characters';
+  document.getElementById('cloudOverlay').classList.add('show');
+}
+
+function openLastPublished(){
+  if (lastPublishedUrl) {
+    window.open(lastPublishedUrl, '_blank');
+  }
+}
+
+function closeCloud(){
+  document.getElementById('cloudOverlay').classList.remove('show');
+}
+
+/* ================= INIT ================= */
+function init(){
+  var gallery = document.getElementById('bgGallery');
+
+  var none = document.createElement('div');
+  none.className = 'bg-thumb active';
+  none.textContent = 'NONE';
+  none.onclick = function(){ setBg('none', none); };
+  gallery.appendChild(none);
+
+  for (var i=0;i<bgImages.length;i++){
+    (function(img){
+      var d = document.createElement('div');
+      d.className = 'bg-thumb';
+      d.style.backgroundImage = 'url(' + img + ')';
+      d.onclick = function(){ setBg(img, d); };
+      gallery.appendChild(d);
+    })(bgImages[i]);
+  }
+
+  renderTabs();
+  loadEditor();
+  renderPreview();
+}
+
+init();
+__ENDSCRIPT__
+</body>
+</html>
+</script>
+
+<!-- ============================================================
+     HOST LOGIC — LYRA SOFTWARE BUILDER
+     Hash-routing: URL#creator+builder  →  opens personalized builder
+     ============================================================ -->
+<script>
+var BUILDER_TEMPLATE = document.getElementById('builderTemplate').textContent;
+var generatedBuilderHTML = '';
+var publishedBName = '';
+var publishedCName = '';
+var shareUrl = '';
+
+/* ---------- helpers ---------- */
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function b64enc(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function jsEsc(s){
+  return String(s)
+    .replace(/\\/g,'\\\\')
+    .replace(/"/g,'\\"')
+    .replace(/\r?\n/g,' ')
+    .replace(/</g,'\\u003c')
+    .replace(/>/g,'\\u003e');
+}
+function show(id){
+  var all = document.querySelectorAll('.screen');
+  for (var i=0;i<all.length;i++) all[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
+
+/* ---------- Generate the personalized builder HTML string ---------- */
+function buildBuilderHTML(bname, cname) {
+  var creatorB64 = b64enc(cname);
+  return BUILDER_TEMPLATE
+      .split('__BUILDER_NAME_JS__').join(jsEsc(bname))
+      .split('__CREATOR_B64__').join(creatorB64)
+      .split('__ENDSCRIPT__').join('</scr' + 'ipt>');
+}
+
+/* ============================================================
+   HASH ROUTING  →  URL#creator+builder  shows the builder
+   ============================================================ */
+function parseHashRoute() {
+  var hash   = location.hash.slice(1);
+  var search = location.search.slice(1);
+
+  var cname = '', bname = '';
+
+  /* Primary format:  #creator+builder */
+  if (hash) {
+    try { hash = decodeURIComponent(hash); } catch(e){}
+    var parts = hash.split('+');
+    cname = parts[0] || '';
+    bname = parts[1] || '';
+  }
+
+  /* Fallback:  ?c=creator&b=builder */
+  if (!cname && search) {
+    var params = {};
+    search.split('&').forEach(function(p){
+      var kv = p.split('=');
+      if (kv[0]) params[kv[0]] = kv[1] ? decodeURIComponent(kv[1].replace(/\+/g,' ')) : '';
+    });
+    cname = params.c || params.creator || '';
+    bname = params.b || params.builder || '';
+  }
+
+  cname = (cname || '').replace(/^#+/, '').trim();
+  bname = (bname || '').trim();
+
+  if (!cname) return false;   /* no route → show normal LYRA UI */
+
+  if (!bname) bname = 'MY WEB BUILDER';
+  bname = bname.toUpperCase();
+
+  /* Build & replace the page with the personalized builder */
+  var builderHTML = buildBuilderHTML(bname, cname);
+  document.open();
+  document.write(builderHTML);
+  document.close();
+  return true;
+}
+
+/* ============================================================
+   LYRA UI FLOW
+   ============================================================ */
+function goCreate(){
+  show('screen-form');
+  setTimeout(function(){
+    document.getElementById('inBuilderName').focus();
+  }, 120);
+}
+
+function publishBuilder(){
+  var bname = (document.getElementById('inBuilderName').value || '').trim();
+  var cname = (document.getElementById('inCreatorName').value || '').trim().replace(/^#+/,'').replace(/\s+/g,'');
+
+  if(!bname){
+    alert('Pehle Web Builder ka naam likhein.');
+    document.getElementById('inBuilderName').focus();
+    return;
+  }
+  if(!cname){
+    alert('Creator name likhein (bina # ke).');
+    document.getElementById('inCreatorName').focus();
+    return;
+  }
+
+  bname = bname.toUpperCase();
+  publishedBName = bname;
+  publishedCName = cname;
+
+  /* Build personalised builder HTML */
+  generatedBuilderHTML = buildBuilderHTML(bname, cname);
+
+  /* Build the live shareable URL:  <base-url>#creator+builder */
+  var base = location.href.split('#')[0].split('?')[0];
+  shareUrl = base + '#' + encodeURIComponent(cname) + '+' + encodeURIComponent(bname);
+
+  /* Display */
+  document.getElementById('publishTag').innerHTML =
+      '<span class="hash">#' + esc(cname) + '</span> <span class="bname">' + esc(bname) + '</span>';
+
+  document.getElementById('publishUrl').innerHTML =
+      '🔗 <span class="domain">' + esc(base) + '</span><span class="hash">#' + esc(cname) + '+' + esc(bname) + '</span>';
+
+  var lines = generatedBuilderHTML.split('\n').length;
+  document.getElementById('publishMeta').innerHTML =
+      'Anyone who opens this URL gets your builder instantly.<br>' +
+      lines + ' lines · ' +
+      generatedBuilderHTML.length.toLocaleString() + ' characters · ' +
+      '🔐 key: <b>' + b64enc(cname).slice(0,10) + '…</b>';
+
+  show('screen-success');
+}
+
+/* ---------- OPEN SITE (opens the live shareable URL) ---------- */
+function openSite(){
+  if (!shareUrl) { alert('Please PUBLISH first.'); return; }
+  window.open(shareUrl, '_blank');
+}
+
+/* ---------- COPY SHARE LINK ---------- */
+function copyShareLink(){
+  if (!shareUrl) { alert('Please PUBLISH first.'); return; }
+  copyText(shareUrl, '🔗 Share link copy ho gaya!');
+}
+
+/* ---------- COPY BUILDER CODE ---------- */
+function copyBuilderCode(){
+  if(!generatedBuilderHTML){ alert('Pehle PUBLISH karein.'); return; }
+  copyText(generatedBuilderHTML, '✅ Poora builder code copy ho gaya!');
+}
+
+function copyText(text, successMsg){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      alert(successMsg);
+    }).catch(function(){ fallbackCopy(text, successMsg); });
+  } else {
+    fallbackCopy(text, successMsg);
+  }
+}
+function fallbackCopy(text, successMsg){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); alert(successMsg); }
+  catch(e){ alert('Copy nahi ho saka.'); }
+  document.body.removeChild(ta);
+}
+
+/* ============================================================
+   BOOT — if URL has hash route, skip LYRA and open builder
+   ============================================================ */
+(function boot(){
+  if (parseHashRoute()) return;   /* page was replaced with the builder */
+  /* No hash → show normal LYRA UI */
+  var app = document.getElementById('lyraApp');
+  if (app) app.style.display = 'block';
+})();
+</script>
+
+</body>
+</html>
