@@ -3,7 +3,10 @@ name: Build
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # manual run ke liye
+  workflow_dispatch:
+
+permissions:
+  contents: write     # commit + push ke liye zaroori
 
 jobs:
   build:
@@ -17,9 +20,14 @@ jobs:
         env:
           MY_SECURE_SCRIPT: ${{ secrets.MY_SECURE_SCRIPT }}
         run: |
-          printf '%s' "$MY_SECURE_SCRIPT" > script.js
+          printf '%s\n' "$MY_SECURE_SCRIPT" > script.js
+          echo "File size: $(wc -c < script.js) bytes"
 
-      - name: Verify file (optional)
+      - name: Commit and push script.js
         run: |
-          echo "Lines: $(wc -l < script.js)"
-          head -n 5 script.js
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add script.js
+          # agar change nahi hua to commit skip
+          git diff --cached --quiet || git commit -m "chore: update script.js from secret"
+          git push
